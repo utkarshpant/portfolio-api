@@ -1,4 +1,5 @@
 // importing modules to use;
+const config = require('config');
 const express = require('express');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
@@ -21,10 +22,11 @@ app.use(helmet());
 app.use('/api', portfolioRoutes);
 app.use('/utility', utilityRoutes);
 
+
 // connect to database;
-mongoose.connect('mongodb://localhost/smallcase', { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => dbDebugger("Connected to the database."))
-    .catch(err => dbDebugger(err));
+mongoose.connect(`mongodb+srv://${config.get('database.username')}:${config.get('database.password')}@cluster0.5yvwv.gcp.mongodb.net/smallcase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("Connected to the database."))
+    .catch(err => console.log(err));
 
 
 // setting routes;

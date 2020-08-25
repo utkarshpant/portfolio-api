@@ -1,0 +1,6 @@
+{
+    "database" : {
+        "username": "portfolio_db_username",
+        "password": "portfolio_db_password"
+    }
+}

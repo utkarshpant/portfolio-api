@@ -34,16 +34,14 @@ app.get('/', (req, res) => {
     res.send('Hello, World.');
 });
 
+app.use(function(err, req, res, next){
+    res.status(500).send({error: "An error occured."});
+
+});
+
 // listening on the set port;
 const port = process.env.PORT || 3000;
 app.listen((port), () => {
     console.log(`Server listening on port ${port}.`);
 })
 
-app.error(function(err, req, res, next){
-    if (err instanceof NotFound) {
-        res.status(404).send({error: "Resource not found."});
-    } else {
-        next(err);
-    }
-});

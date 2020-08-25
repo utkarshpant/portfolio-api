@@ -126,7 +126,7 @@ router.post('/sell', (req, res) => {
 
             // check that resultant share count > 0;
             if ((security.shares - trade.quantity) < 0) {
-                return res.status(400).send({ error: "Bad Request", message: `Request cannot be honoured for given quantity. Result ${security.shares - trade.quantity}` });
+                return res.status(400).send({ error: "Bad Request", message: `Request cannot be serviced. Result (${security.shares - trade.quantity})` });
             }
 
             // register sell trade and update shares;

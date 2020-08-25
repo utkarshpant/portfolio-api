@@ -39,3 +39,11 @@ const port = process.env.PORT || 3000;
 app.listen((port), () => {
     console.log(`Server listening on port ${port}.`);
 })
+
+app.error(function(err, req, res, next){
+    if (err instanceof NotFound) {
+        res.status(404).send({error: "Resource not found."});
+    } else {
+        next(err);
+    }
+});

@@ -25,7 +25,6 @@ app.use('/utility', utilityRoutes);
 
 let mongooseConnectionString;
 if (app.get('env') == "development") {
-    console.log(app.get("env"));
     mongooseConnectionString = "mongodb://localhost:27017/smallcase";
 }
 

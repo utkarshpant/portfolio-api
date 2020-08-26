@@ -7,6 +7,54 @@
 
 The API supports some basic **GET**, **POST** and **PUT** requests that are detailed below.
 
+Note the expected format for each request below:
+<br><br>
+
+### 1.  buy: (/api/buy)
+
+    Request Body:
+
+    {
+        "ticker: Uppercase String,
+        "type": buy,
+        "quantity": Number,
+        "price": Number
+    }
+
+### 2.  sell: (/api/sell)
+
+    Request Body:
+
+    {
+        "ticker: Uppercase String,
+        "type": sell,
+        "quantity": Number,
+    }
+
+### 3.  update: (/api/update)
+
+    Request Body:
+
+    {
+        "ticker: Uppercase String,
+        "type": buy,
+        "quantity": Number,
+    }
+
+### 4.  getPortfolio:
+
+    No request body
+
+### 5.  getHoldings:
+
+    No request body
+
+### 6.  getReturns:
+
+    No request body
+
+
+<br><br>
 | Endpoint Name 	| Method 	| Endpoint            	| Response                                                     	|
 |---------------	|--------	|---------------------	|--------------------------------------------------------------	|
 | getReturns    	| GET    	| api/getReturns      	| {name: String, cumulativeReturns: Number}                    	|

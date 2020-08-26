@@ -5,9 +5,11 @@
 
 (To see the project in action, go [here.](https://portfolio-api-utk.herokuapp.com))
 
+## Primary API Endpoints:
+
 The API supports some basic **GET**, **POST** and **PUT** requests that are detailed below.
 
-Note the expected format for each request below:
+The expected format for each request is:
 <br><br>
 
 ### 1.  buy: (/api/buy)
@@ -15,7 +17,7 @@ Note the expected format for each request below:
     Request Body:
 
     {
-        "ticker: Uppercase String,
+        "ticker": Uppercase String,
         "type": buy,
         "quantity": Number,
         "price": Number
@@ -26,7 +28,7 @@ Note the expected format for each request below:
     Request Body:
 
     {
-        "ticker: Uppercase String,
+        "ticker": Uppercase String,
         "type": sell,
         "quantity": Number,
     }
@@ -36,7 +38,7 @@ Note the expected format for each request below:
     Request Body:
 
     {
-        "ticker: Uppercase String,
+        "ticker": Uppercase String,
         "type": buy,
         "quantity": Number,
     }
@@ -56,7 +58,7 @@ Note the expected format for each request below:
 
 <br><br>
 
-## Response by API Endpoints, including possible error codes.
+### Response by API Endpoints, including possible error codes:
 
 | Method 	| Endpoint            	| Response                                                     	    | Errors Returned (Status codes)     |
 |--------	|---------------------	|-------------------------------------------------------------------|------------------------------------|
@@ -66,3 +68,38 @@ Note the expected format for each request below:
 | POST   	| api/buy             	| {ticker: String, type: "buy", quantity: Number, price: Number}    |400, 500                            |
 | POST   	| api/sell            	| Trade object registered or "400, BAD REQUEST"                	    |400, 422                            |
 | PUT    	| api/updateTrade/:id 	| Trade object registered or "4xx" response depending on Error 	    |400, 404                            |
+
+<br><br>
+
+## Utility API Endpoints:
+
+The API supports some basic **POST** requests that are detailed below.
+
+The expected format for each request is:
+<br><br>
+
+### 1.  addPortfolio: (/utility/addPortfolio)
+
+    Request Body:
+
+    {
+        "name": String
+    }
+
+### 2.  addTicker: (/api/sell)
+
+    Request Body:
+
+    {
+        "ticker": String
+        "portfolioId": String
+    }
+
+<br><br>
+
+## Response by Utility Endpoints, including possible error codes.
+
+| Method 	| Endpoint            	    | Response          	                                 | Errors Returned (Status codes)     |
+|-----------|---------------------------|--------------------------------------------------------|------------------------------------|
+| POST   	| utility/addPortfolio      | {name: String, securities; []}                         |500                                 |
+| POST   	| api/sell            	    | {ticker: String, avgBuyPrice: 0, shares: 0, trades: []}|400                                 |

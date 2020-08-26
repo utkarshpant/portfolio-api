@@ -2,9 +2,9 @@ const dbDebugger = require('debug')('app:db');
 const apiDebugger = require('debug')('app:api');
 const express = require('express');
 const router = express.Router();
-const errorHandlerMiddleware = require('../middleware/errorHandlerMiddleware');
+const Joi = require('joi');
 const customError = require('http-errors');
-
+const errorHandlerMiddleware = require('../middleware/errorHandlerMiddleware');
 
 // importing models;
 const Portfolio = require('../models/portfolioModel');
@@ -14,18 +14,15 @@ const validations = require('../validations/validateRequest');
 
 // utility endpoints for development;
 router.post('/addPortfolio', errorHandlerMiddleware((req, res) => {
-    const portfolioName = request.body.name;
-    let { error } = validations.validateUtilityRequests(req);
-
+    const { error } = validations.validateUtilityRequest(req);    
+    const portfolioName = req.body.name;
     if (error) {
-        throw customError(400, "Bad Request.");
-    }
-
-    else {
-        const portfolioName = req.body.name;
+        throw customError(400, "Bad Request; re-check the request body.");
+    } else {
 
         if (!portfolioName) {
-            throw customError(400, "Bad Request");
+            // throw customError(400, "Bad Request");
+            return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
         }
 
         (async () => {
@@ -42,16 +39,32 @@ router.post('/addPortfolio', errorHandlerMiddleware((req, res) => {
 
 router.post('/addTicker/:portfolioName', errorHandlerMiddleware((req, res) => {
 
-    let { error } = validations.validateUtilityRequests(req);
+    let { error } = validations.validateUtilityRequest(req);
 
     if (error) {
         throw customError(400, "Bad Request.");
     } else {
         (async () => {
             const ticker = req.body.ticker;
-            const portfolioId = req.body.portfolioId;
+
+            if (!ticker) {
+                res.status(400).send("Invalid ticker");
+            }
+
+            // get matching portfolio and check if ticker already exists;
+            const portfolioName = req.params.portfolioName;
             let security = {"ticker": ticker, trades: [], avgBuyPrice: 0, shares: 0};
-            let portfolio = await Portfolio.findById(portfolioId).catch(err => res.status(500).send("An error occured."));
+            let portfolio = await Portfolio.findOne({"name": portfolioName}).catch(err => res.status(500).send("An error occured."));
+            if (!portfolio) {
+                res.status(404).send("No portfolio found.");
+
+            }
+            
+            let existingTicker = portfolio.securities.find(security => security.ticker == ticker);
+
+            if (existingSecurity) {
+                return res.status(422).send("This Ticker already exists");
+            }
             portfolio.securities.push(security);
             await portfolio.save().then(result => res.send(result)).catch(err => res.send(err)).catch(err => res.status(500).send("An error occured in saving the Ticker"));
         })();
@@ -78,5 +91,13 @@ router.post('/addTicker/:portfolioName', errorHandlerMiddleware((req, res) => {
 //         res.send(portfolio.securities);
 //     })();
 // })
+function validateUtilityRequest(request) {
+    const utilityRequestSchema = Joi.object({
+        ticker: Joi.string().trim().uppercase(),
+        name: Joi.string().trim(),
+    })
+
+    return utilityRequestSchema.validate(request.body);
+}
 
 module.exports = router;

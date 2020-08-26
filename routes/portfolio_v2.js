@@ -9,6 +9,9 @@ const errorHandlerMiddleware = require('../middleware/errorHandlerMiddleware');
 // importing models;
 const Portfolio = require('../models/portfolioModel');
 
+// import validations;
+const validations = require('../validations/validateRequest');
+
 // return securities with ticker, shares, trade history;
 router.get('/getPortfolio/:portfolioName', errorHandlerMiddleware((req, res) => {
 
@@ -91,7 +94,7 @@ router.post('/buy/:portfolioName', errorHandlerMiddleware((req, res) => {
     */
 
     // validating request body;
-    const { error } = validateRequest(req);
+    const { error } = validations.validateTradeRequest(req);
     if (error) {
         throw customError(400, "Bad Request; re-check the request body.");
     } else {
@@ -152,7 +155,7 @@ router.post('/sell/:portfolioName', errorHandlerMiddleware((req, res) => {
             - resultant shares > 0 always
     */
     // validating request body;
-    const { error, result } = validateRequest(req);
+    const { error } = validations.validateTradeRequest(req);
     if (error) {
         throw customError(400, "Bad Request; re-check the request body.");
     } else {
@@ -207,7 +210,7 @@ router.put('/update/:portfolioName/:id', errorHandlerMiddleware((req, res) => {
             - quantity > 0 always
     */
 
-    const { error, result } = validateRequest(req);
+    const { error } = validations.validateTradeRequest(req);
     if (error) {
         throw customError(400, "Bad Request; re-check the request body.");
         // return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });

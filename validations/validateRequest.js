@@ -1,7 +1,7 @@
 const Joi = require("joi");
 
 // function to validate requests;
-module.exports = function validateTradeRequest(request) {
+function validateTradeRequest(request) {
     const tradeRequestSchema = Joi.object({
         ticker: Joi.string().required().trim(),
         type: Joi.string().required().valid("buy", "sell").trim(),
@@ -12,11 +12,15 @@ module.exports = function validateTradeRequest(request) {
     return tradeRequestSchema.validate(request.body);
 }
 
-module.exports = function validateUtilityRequest(request) {
+function validateUtilityRequest(request) {
     const utilityRequestSchema = Joi.object({
         ticker: Joi.string().trim().uppercase(),
         name: Joi.string().trim(),
     })
 
-    return tradeRequestSchema.validate(request.body);
+    return utilityRequestSchema.validate(request.body);
 }
+
+module.exports.validateUtilityRequest = validateUtilityRequest;
+
+module.exports.validateTradeRequest = validateTradeRequest;

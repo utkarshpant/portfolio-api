@@ -8,6 +8,7 @@ const apiDebugger = require('debug')('app:api');
 
 // importing routes;
 const portfolioRoutes = require('./routes/portfolio');
+const newPortfolioRoutes = require('./routes/portfolio_v2');
 const utilityRoutes = require('./routes/utilities');
 
 // instantiating the app;
@@ -21,18 +22,19 @@ app.use(helmet());
 // setting up imported routes;
 app.use('/api', portfolioRoutes);
 app.use('/utility', utilityRoutes);
-
+app.use('/api/v2', newPortfolioRoutes);
 
 let mongooseConnectionString;
 if (app.get('env') == "development") {
     mongooseConnectionString = "mongodb://localhost:27017/smallcase";
 }
 
-mongooseConnectionString = `mongodb+srv://${config.get('database.username')}:${config.get('database.password')}@cluster0.5yvwv.gcp.mongodb.net/smallcase?retryWrites=true&w=majority`;
+console.log(mongooseConnectionString);
+// mongooseConnectionString = `mongodb+srv://${config.get('database.username')}:${config.get('database.password')}@cluster0.5yvwv.gcp.mongodb.net/smallcase?retryWrites=true&w=majority`;
 
 // connect to database;
 mongoose.connect(mongooseConnectionString, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("Connected to the database."))
+    .then(() => console.log(`Connected to the database with ${mongooseConnectionString}`))
     .catch(err => console.log(err));
 
 

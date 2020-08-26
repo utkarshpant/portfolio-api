@@ -102,4 +102,4 @@ The expected format for each request is:
 | Method 	| Endpoint            	    | Response          	                                 | Errors Returned (Status codes)     |
 |-----------|---------------------------|--------------------------------------------------------|------------------------------------|
 | POST   	| utility/addPortfolio      | {name: String, securities; []}                         |500                                 |
-| POST   	| api/addTicker          	    | {ticker: String, avgBuyPrice: 0, shares: 0, trades: []}|400                             |
+| POST   	| api/addTicker          	| {ticker: String, avgBuyPrice: 0, shares: 0, trades: []}|400                                 |

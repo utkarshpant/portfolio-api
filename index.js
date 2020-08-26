@@ -35,7 +35,7 @@ app.get('/', (req, res) => {
 });
 
 app.use(function(err, req, res, next){
-    res.status(500).send({error: "An error occured."});
+    res.status(err.status).send(err.message);
 
 });
 

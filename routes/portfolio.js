@@ -3,6 +3,7 @@ const apiDebugger = require('debug')('app:api');
 const express = require('express');
 const router = express.Router();
 const Joi = require('joi');
+const customError = require('http-errors');
 
 // importing models;
 const Portfolio = require('../models/portfolioModel');
@@ -11,7 +12,6 @@ const { string } = require('joi');
 // return securities with ticker, shares, trade history;
 router.get('/getPortfolio', (req, res) => {
     (async () => {
-        console.log("Got here");
         const portfolio = await Portfolio.findOne(
             { name: "TestPortfolio" },
             { "securities.avgBuyPrice": 0 }
@@ -50,7 +50,7 @@ router.get('/getReturns', (req, res) => {
 });
 
 // place a buy trade
-router.post('/buy', (req, res) => {
+router.post('/buy', errorHandlerMiddleware((req, res) => {
     /*
         Request body includes:
         Trade object, including ticker, type, quantity, price
@@ -66,10 +66,13 @@ router.post('/buy', (req, res) => {
     // validating request body;
     const { error } = validateRequest(req);
     if (error) {
-        return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." })
+        // console.log("A validation error occured in buy.");
+        throw customError(400, "Bad Request; re-check the request body.");
+        // return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." })
     } else {
         if (req.body.type != "buy") {
-            return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
+            throw customError(400, "Bad request; type must be 'buy'.")
+            // return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
         }
         const trade = req.body;
         (async () => {
@@ -88,17 +91,17 @@ router.post('/buy', (req, res) => {
             // save portfolio
             try {
                 portfolio.save().then(res.status(200).send(trade));
-            } catch(ex) {
+            } catch(err) {
                 let errorMessages = [];
                 ex.errors.forEach(property => errorMessages.push(property));
-                res.send({error: "An error occured in saving the transaction.", message: errorMessages})
+                res.status(500).send("An error occured in saving the transaction.")
             }
         })();
     }
-});
+}));
 
 // place a sell trade
-router.post('/sell', (req, res) => {
+router.post('/sell', errorHandlerMiddleware((req, res) => {
     /*
         Request body includes:
         Trade object, including ticker, type, quantity
@@ -113,20 +116,23 @@ router.post('/sell', (req, res) => {
     // validating request body;
     const { error, result } = validateRequest(req);
     if (error) {
-        res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
+        throw customError(400, "Bad Request; re-check the request body.");
+        // res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
     } else {
         if (req.body.type != "sell") {
-            return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
+            throw customError(400, "Bad Request; type must be 'sell'.");
+            // return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
         }
         const trade = req.body;
         (async () => {
             // retrieve portfolio and find relevant security;
-            const portfolio = await Portfolio.findOne({ "name": "TestPortfolio" });
+            const portfolio = await Portfolio.findOne({ "name": "TestPortfolio" }).catch(err => res.send(err));
             const security = await portfolio.securities.find(security => security.ticker == trade.ticker);
 
             // check that resultant share count > 0;
             if ((security.shares - trade.quantity) < 0) {
-                return res.status(400).send({ error: "Bad Request", message: `Request cannot be serviced. Result (${security.shares - trade.quantity})` });
+                // throw customError(422, `The given Trade will result in ${security.shares - trade.quantity} shares and cannot be processed.`);
+                return res.status(422).send(`Request cannot be serviced. Results in (${security.shares - trade.quantity}) shares.`);
             }
 
             // register sell trade and update shares;
@@ -135,17 +141,15 @@ router.post('/sell', (req, res) => {
 
             // save portfolio
             try {
-                portfolio.save().then(res.status(200).send(trade));
-            } catch(ex) {
+                portfolio.save().then(res.status(200).send(trade)).catch();
+            } catch(err) {
                 let errorMessages = [];
                 ex.errors.forEach(property => errorMessages.push(property));
-                res.send({error: "An error occured in saving the transaction.", message: errorMessages})
+                res.status(500).send("An error occured in saving the transaction.")
             }
         })();
     }
-
-
-});
+}));
 
 router.put('/updateTrade/:id', (req, res) => {
     /*
@@ -160,21 +164,24 @@ router.put('/updateTrade/:id', (req, res) => {
     */
    const { error, result } = validateRequest(req);
     if (error) {
-        return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
+        throw customError(400, "Bad Request; re-check the request body.");
+        // return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
     } else {
         // check for invalid Trade ID;
         if (req.params.id == null || req.params.id == "") {
-            return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
+            throw customError(400, "Bad Request; Invalid Trade ID.");
+            // return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
         }
         const updatedTrade = req.body;
         (async () => {
             // retrieve portfolio; set security;
-            const portfolio = await Portfolio.findOne({ "name": "TestPortfolio" });
+            const portfolio = await Portfolio.findOne({ "name": "TestPortfolio" }).catch(err => res.send(err));
             const tradeId = req.params.id;
             const security = portfolio.securities.find(security => security.trades.id(tradeId));
 
             if (!security) {
-                return res.status(400).send({ error: "Bad Request", message: `Invalid ID(${tradeId}). Recheck and retry.` });
+                // throw customError(404, `No Trade found with ID(${tradeId}).`);
+                return res.status(404).send(`Bad Request. No Trade found with ID(${tradeId}).`);
             }
             const trade = security.trades.find(trade => trade.id == tradeId);
     
@@ -198,10 +205,7 @@ router.put('/updateTrade/:id', (req, res) => {
             }
     
             } else {
-                res.status(400).send({
-                    error: "Bad Request",
-                    message: "Trades and Updates must be of type 'buy' and have matching tickers"
-                })
+                res.status(400).send("Trades and Updates must be of type 'buy' and have matching tickers.")
             }
         })();
     }
@@ -218,6 +222,16 @@ function validateRequest(request) {
     })
 
     return tradeRequestSchema.validate(request.body);
+}
+
+function errorHandlerMiddleware(handler) {
+    return async (req, res, next) => {
+        try {
+            await handler(req, res);
+        } catch (error) {
+            next(error);
+        }
+    }
 }
 
 module.exports = router;

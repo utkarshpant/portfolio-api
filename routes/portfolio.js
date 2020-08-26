@@ -127,6 +127,7 @@ router.post('/sell', errorHandlerMiddleware((req, res) => {
             throw customError(400, "Bad Request; type must be 'sell'.");
             // return res.status(400).send({ error: "Bad Request", message: "Recheck the request body and retry." });
         }
+
         const trade = req.body;
         (async () => {
             // retrieve portfolio and find relevant security;
@@ -140,7 +141,7 @@ router.post('/sell', errorHandlerMiddleware((req, res) => {
             }
 
             // register sell trade and update shares;
-            security.trades.push(trade);
+            security.trades.push({"ticker": trade.ticker, "type": "sell", quantity: trade.quantity});
             security.shares -= trade.quantity;
 
             // save portfolio

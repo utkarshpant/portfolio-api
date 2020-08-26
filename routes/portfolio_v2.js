@@ -36,11 +36,15 @@ router.get('/getHoldings/:portfolioName', errorHandlerMiddleware((req, res) => {
 
     (async () => {
         const portfolio = await Portfolio.findOne(
-            { name: req.params.portfolioName },
+            { name: portfolioName },
             { "securities.trades": 0 }
         ).catch(err => res.send(err));
 
-        res.status(200).send(portfolio);
+        // no portfolio found;
+        if (!portfolio) {
+            return res.status(404).send("No portfolio found.");
+        }
+        res.status(200).send({"response": portfolio});
     })();
 }));
 

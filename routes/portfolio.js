@@ -220,8 +220,8 @@ function validateRequest(request) {
     const tradeRequestSchema = Joi.object({
         ticker: Joi.string().required().trim(),
         type: Joi.string().required().valid("buy", "sell").trim(),
-        quantity: Joi.number().required().min(0).positive(),
-        price: Joi.number().min(0).positive()
+        quantity: Joi.number().required().min(1).positive(),
+        price: Joi.number().min(1).positive()
     })
 
     return tradeRequestSchema.validate(request.body);

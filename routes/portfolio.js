@@ -156,7 +156,7 @@ router.post('/sell', errorHandlerMiddleware((req, res) => {
     }
 }));
 
-router.put('/update/:id', (req, res) => {
+router.put('/update/:id', errorHandlerMiddleware((req, res) => {
     /*
         Request body includes:
         Updated Trade object of 'buy' type, updated quantity, updated price
@@ -214,14 +214,12 @@ router.put('/update/:id', (req, res) => {
             }
         })();
     }
-    
-    
-})
+}));
 
 function validateRequest(request) {
     const tradeRequestSchema = Joi.object({
-        ticker: Joi.string().required().uppercase().trim(),
-        type: Joi.string().required().valid("buy", "sell").lowercase().trim(),
+        ticker: Joi.string().required().trim(),
+        type: Joi.string().required().valid("buy", "sell").trim(),
         quantity: Joi.number().required().min(0).positive(),
         price: Joi.number().min(0).positive()
     })

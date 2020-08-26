@@ -18,5 +18,9 @@
     "joi": "^17.2.1",
     "mongoose": "^5.10.0",
     "nodemon": "^2.0.4"
+  },
+  "devDependencies": {
+    "jest": "^26.4.2",
+    "supertest": "^4.0.2"
   }
 }

@@ -23,8 +23,16 @@ app.use('/api', portfolioRoutes);
 app.use('/utility', utilityRoutes);
 
 
+let mongooseConnectionString;
+if (app.get('env') == "development") {
+    console.log(app.get("env"));
+    mongooseConnectionString = "mongodb://localhost:27017/smallcase";
+}
+
+mongooseConnectionString = `mongodb+srv://${config.get('database.username')}:${config.get('database.password')}@cluster0.5yvwv.gcp.mongodb.net/smallcase?retryWrites=true&w=majority`;
+
 // connect to database;
-mongoose.connect(`mongodb+srv://${config.get('database.username')}:${config.get('database.password')}@cluster0.5yvwv.gcp.mongodb.net/smallcase?retryWrites=true&w=majority`, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongooseConnectionString, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log("Connected to the database."))
     .catch(err => console.log(err));
 

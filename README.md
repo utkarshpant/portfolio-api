@@ -55,17 +55,14 @@ Note the expected format for each request below:
 
 
 <br><br>
-| Endpoint Name 	| Method 	| Endpoint            	| Response                                                     	|
-|---------------	|--------	|---------------------	|--------------------------------------------------------------	|
-| getReturns    	| GET    	| api/getReturns      	| {name: String, cumulativeReturns: Number}                    	|
-| getPortfolio  	| GET    	| api/getPortfolio    	| Portfolio without avgBuyPrice[TICKER] property               	|
-| getHoldings   	| GET    	| api/getHoldings     	| Portfolio without Trades in any Security                     	|
-| buy           	| POST   	| api/buy             	| Trade object registered or "400, BAD REQUEST"                	|
-| sell          	| POST   	| api/sell            	| Trade object registered or "400, BAD REQUEST"                	|
-| update        	| PUT    	| api/updateTrade/:id 	| Trade object registered or "4xx" response depending on Error 	|
 
-The **POST** requests must be accompanied by an object resembling a Trade, with the following properties:
+## Response by API Endpoints, including possible error codes.
 
-{
-    "name": String
-}
+| Method 	| Endpoint            	| Response                                                     	    | Errors Returned (Status codes)     |
+|--------	|---------------------	|-------------------------------------------------------------------|------------------------------------|
+| GET    	| api/getReturns      	| {name: String, cumulativeReturns: [Number]}                  	    |None expected                       |
+| GET    	| api/getPortfolio    	| {name: String, securities: [Securities]}                          |None expected                       |
+| GET    	| api/getHoldings     	| {name: String, securities: [Securities]}                     	    |None expected                       |
+| POST   	| api/buy             	| {ticker: String, type: "buy", quantity: Number, price: Number}    |400, 500                            |
+| POST   	| api/sell            	| Trade object registered or "400, BAD REQUEST"                	    |400, 422                            |
+| PUT    	| api/updateTrade/:id 	| Trade object registered or "4xx" response depending on Error 	    |400, 404                            |

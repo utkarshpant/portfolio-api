@@ -80,6 +80,10 @@ router.post('/buy', errorHandlerMiddleware((req, res) => {
             const portfolio = await Portfolio.findOne({ "name": "TestPortfolio" }).catch(err => res.send(err));
             const security = portfolio.securities.find(security => security.ticker == trade.ticker);
 
+            // if the ticker does not exist, return a 404;
+            if (!security) {
+                res.status(404).send("Invalid ticker.");
+            }
             // register sell trade and update shares;
             security.trades.push(trade);
             let oldShares = security.shares;
@@ -90,7 +94,7 @@ router.post('/buy', errorHandlerMiddleware((req, res) => {
 
             // save portfolio
             try {
-                portfolio.save().then(res.status(200).send(trade));
+                await portfolio.save().then(res.status(200).send(trade));
             } catch(err) {
                 let errorMessages = [];
                 ex.errors.forEach(property => errorMessages.push(property));
@@ -141,7 +145,7 @@ router.post('/sell', errorHandlerMiddleware((req, res) => {
 
             // save portfolio
             try {
-                portfolio.save().then(res.status(200).send(trade)).catch();
+                await portfolio.save().then(res.status(200).send(trade)).catch();
             } catch(err) {
                 let errorMessages = [];
                 ex.errors.forEach(property => errorMessages.push(property));
@@ -197,7 +201,7 @@ router.put('/updateTrade/:id', (req, res) => {
                 
             // save portfolio
             try {
-                portfolio.save().then(res.status(200).send(updatedTrade));
+                await portfolio.save().then(res.status(200).send(updatedTrade));
             } catch(ex) {
                 let errorMessages = [];
                 ex.errors.forEach(property => errorMessages.push(property));
@@ -215,7 +219,7 @@ router.put('/updateTrade/:id', (req, res) => {
 
 function validateRequest(request) {
     const tradeRequestSchema = Joi.object({
-        ticker: Joi.string().required().uppercase().valid('TCS', 'WIPRO', 'GODREJIND').trim(),
+        ticker: Joi.string().required().uppercase().trim(),
         type: Joi.string().required().valid("buy", "sell").lowercase().trim(),
         quantity: Joi.number().required().min(0).positive(),
         price: Joi.number().min(0).positive()

@@ -8,30 +8,26 @@ const Portfolio = require('../models/portfolioModel');
 
 // utility endpoints for development;
 router.post('/addPortfolio', (req, res) => {
-    let portfolio = new Portfolio({
-        name: req.body.name,
-        securities: [
-            {
-                ticker: "TCS",
-                shares: 0,
-                avgBuyPrice: 0,
-                trades: []
-            },
-            {
-                ticker: "WIPRO",
-                avgBuyPrice: 0,
-                shares: 0,
-                trades: []
-            },
-            {
-                ticker: "GODREJIND",
-                avgBuyPrice: 0,
-                shares: 0,
-                trades: []
-            }
-        ]
-    });
-    portfolio.save().then(result => res.send(result)).catch(err => res.send(err));
+    (async () => {
+        let portfolio = new Portfolio({
+            name: req.body.name,
+            /*
+                securities: [] is added automatically due to Schema constraints;
+            */
+        });
+        await portfolio.save().then(result => res.send(result)).catch(err => res.send(err));
+    })();
+});
+
+router.post('/addTicker', (req, res) => {
+    (async () => {
+        const ticker = req.body.ticker;
+        const portfolioId = req.body.portfolioId;
+        let security = {"ticker": ticker, trades: [], avgBuyPrice: 0, shares: 0};
+        let portfolio = await Portfolio.findById(portfolioId).catch(err => res.status(500).send("An error occured."));
+        portfolio.securities.push(security);
+        await portfolio.save().then(result => res.send(result)).catch(err => res.send(err)).catch(err => res.status(500).send("An error occured in saving the Ticker"));
+    })();
 });
 
 

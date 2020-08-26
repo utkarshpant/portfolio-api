@@ -73,7 +73,7 @@ The expected format for each request is:
 
 ## Utility API Endpoints:
 
-The API supports some basic **POST** requests that are detailed below.
+The API supports some basic **POST** requests that are detailed below. Note that these endpoints are currently for development use and thus **do not validate requests as exhaustively as the Primary API.**
 
 The expected format for each request is:
 <br><br>
@@ -86,7 +86,7 @@ The expected format for each request is:
         "name": String
     }
 
-### 2.  addTicker: (/api/sell)
+### 2.  addTicker: (/api/addTicker)
 
     Request Body:
 
@@ -97,9 +97,9 @@ The expected format for each request is:
 
 <br><br>
 
-## Response by Utility Endpoints, including possible error codes.
+### Response by Utility Endpoints, including possible error codes.
 
 | Method 	| Endpoint            	    | Response          	                                 | Errors Returned (Status codes)     |
 |-----------|---------------------------|--------------------------------------------------------|------------------------------------|
 | POST   	| utility/addPortfolio      | {name: String, securities; []}                         |500                                 |
-| POST   	| api/sell            	    | {ticker: String, avgBuyPrice: 0, shares: 0, trades: []}|400                                 |
+| POST   	| api/addTicker          	    | {ticker: String, avgBuyPrice: 0, shares: 0, trades: []}|400                             |

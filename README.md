@@ -43,7 +43,7 @@ The expected format for each request is:
         "quantity": Number,
     }
 
-### 3.  update: (/api/v2/update/:portfolioName/:id)
+### 3.  update: (/api/v2/update/:portfolioName/:tradeId)
 
     Request Body:
 
@@ -76,8 +76,8 @@ The expected format for each request is:
 | GET    	| api/v2/getPortfolio/:portfolioName    	| {name: String, securities: [Securities]}                          |400, 404                            |
 | GET    	| api/v2/getHoldings/:portfolioName     	| {name: String, securities: [Securities]}                     	    |400, 404                            |
 | POST   	| api/v2/buy/:portfolioName             	| {ticker: String, type: "buy", quantity: Number, price: Number}    |400, 500                            |
-| POST   	| api/v2/sell:portfolioName            	| Trade object saved or "400, BAD REQUEST"                	    |400, 422                            |
-| PUT    	| api/v2/update/:portfolioName/:id 	| Trade object saved or "4xx" response depending on Error 	    |400, 404                            |
+| POST   	| api/v2/sell:portfolioName            	| {ticker: String, type: "sell", quantity: Number}                	    |400, 422                            |
+| PUT    	| api/v2/update/:portfolioName/:tradeId 	| {ticker: String, type: "buy", quantity: Number} 	    |400, 404                            |
 
 <br><br>
 

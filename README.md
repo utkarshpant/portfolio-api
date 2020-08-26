@@ -72,12 +72,12 @@ The expected format for each request is:
 
 | Method 	| Endpoint            	| Response                                                     	    | Errors Returned (Status codes)     |
 |--------	|---------------------	|-------------------------------------------------------------------|------------------------------------|
-| GET    	| api/getReturns/:portfolioName      	| {name: String, cumulativeReturns: [Number]}                  	    |400, 404                            |
-| GET    	| api/getPortfolio/:portfolioName    	| {name: String, securities: [Securities]}                          |400, 404                            |
-| GET    	| api/getHoldings/:portfolioName     	| {name: String, securities: [Securities]}                     	    |400, 404                            |
-| POST   	| api/buy/:portfolioName             	| {ticker: String, type: "buy", quantity: Number, price: Number}    |400, 500                            |
-| POST   	| api/sell:portfolioName            	| Trade object saved or "400, BAD REQUEST"                	    |400, 422                            |
-| PUT    	| api/update/:portfolioName/:id 	| Trade object saved or "4xx" response depending on Error 	    |400, 404                            |
+| GET    	| api/v2/getReturns/:portfolioName      	| {name: String, cumulativeReturns: [Number]}                  	    |400, 404                            |
+| GET    	| api/v2/getPortfolio/:portfolioName    	| {name: String, securities: [Securities]}                          |400, 404                            |
+| GET    	| api/v2/getHoldings/:portfolioName     	| {name: String, securities: [Securities]}                     	    |400, 404                            |
+| POST   	| api/v2/buy/:portfolioName             	| {ticker: String, type: "buy", quantity: Number, price: Number}    |400, 500                            |
+| POST   	| api/v2/sell:portfolioName            	| Trade object saved or "400, BAD REQUEST"                	    |400, 422                            |
+| PUT    	| api/v2/update/:portfolioName/:id 	| Trade object saved or "4xx" response depending on Error 	    |400, 404                            |
 
 <br><br>
 

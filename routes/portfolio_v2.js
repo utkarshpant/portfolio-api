@@ -47,7 +47,7 @@ router.get('/getHoldings/:portfolioName', errorHandlerMiddleware((req, res) => {
         if (!portfolio) {
             return res.status(404).send("No portfolio found.");
         }
-        res.status(200).send({"response": portfolio});
+        res.status(200).send(portfolio);
     })();
 }));
 

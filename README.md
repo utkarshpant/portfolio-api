@@ -7,8 +7,8 @@
 <br>
 
 # (api/v2) is an improved version of the portfolio-api
-### It removes the dependency on a portfolio named "TestPortfolio" existing in the database.
-### All primary requests now require the "name" of the portfolio to be provided in the request.
+It removes the dependency on a portfolio named "TestPortfolio" existing in the database.
+All primary requests now require the "name" of the portfolio to be provided in the request.
 <br>
 
 NOTE: To test the API, please use portfolio name: **TestPortfolio**, or create a portfolio as defined in the Utility endpoints below.
@@ -81,39 +81,6 @@ The expected format for each request is:
 
 <br><br>
 
-## Utility API Endpoints:
-
-The API supports some basic **POST** requests that are detailed below. Note that these endpoints are currently for development use and thus **do not validate requests as exhaustively as the Primary API.**
-
-The expected format for each request is:
-<br><br>
-
-### 1.  addPortfolio: (/utility/addPortfolio)
-
-    Request Body:
-
-    {
-        "name": String
-    }
-
-### 2.  addTicker: (/api/addTicker/portfolioName)
-
-    Request Body:
-
-    {
-        "ticker": String
-        "portfolioId": String
-    }
-
-<br><br>
-
-### Response by Utility Endpoints, including possible error codes.
-
-| Method 	| Endpoint            	    | Response          	                                 | Errors Returned (Status codes)     |
-|-----------|---------------------------|--------------------------------------------------------|------------------------------------|
-| POST   	| utility/addPortfolio      | {name: String, securities; []}                         |500                                 |
-| POST   	| api/addTicker          	| {ticker: String, avgBuyPrice: 0, shares: 0, trades: []}|400                                 |
-
 
 # Existing portfolio-api
 ### Depends on the existence of a portfolio named "TestPortfolio" existing in the database.
@@ -156,15 +123,15 @@ The expected format for each request is:
         "quantity": Number,
     }
 
-### 4.  getPortfolio:
+### 4.  getPortfolio: (/api/getPortfolio)
 
     No request body
 
-### 5.  getHoldings:
+### 5.  getHoldings: (/api/getHoldings)
 
     No request body
 
-### 6.  getReturns:
+### 6.  getReturns: (/api/getReturns)
 
     No request body
 
@@ -184,7 +151,7 @@ The expected format for each request is:
 
 <br><br>
 
-## Utility API Endpoints:
+# Utility API Endpoints:
 
 The API supports some basic **POST** requests that are detailed below. Note that these endpoints are currently for development use and thus **do not validate requests as exhaustively as the Primary API.**
 
@@ -199,7 +166,7 @@ The expected format for each request is:
         "name": String
     }
 
-### 2.  addTicker: (/api/addTicker)
+### 2.  addTicker: (/api/addTicker/:portfolioName)
 
     Request Body:
 
@@ -208,11 +175,11 @@ The expected format for each request is:
         "portfolioId": String
     }
 
-<br><br>
+
 
 ### Response by Utility Endpoints, including possible error codes.
 
 | Method 	| Endpoint            	    | Response          	                                 | Errors Returned (Status codes)     |
 |-----------|---------------------------|--------------------------------------------------------|------------------------------------|
-| POST   	| utility/addPortfolio      | {name: String, securities; []}                         |500                                 |
-| POST   	| api/addTicker          	| {ticker: String, avgBuyPrice: 0, shares: 0, trades: []}|400                                 |
+| POST   	| utility/addPortfolio      | {name: String, securities; []}                         |400, 500                            |
+| POST   	| api/addTicker          	| {ticker: String, avgBuyPrice: 0, shares: 0, trades: []}|400, 404                            |

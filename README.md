@@ -22,7 +22,7 @@ The API supports some basic **GET**, **POST** and **PUT** requests that are deta
 The expected format for each request is:
 <br><br>
 
-### 1.  buy: (/api/buy/:portfolioName)
+### 1.  buy: (/api/v2/buy/:portfolioName)
 
     Request Body:
 
@@ -33,7 +33,7 @@ The expected format for each request is:
         "price": Number
     }
 
-### 2.  sell: (/api/sell/:portfolioName)
+### 2.  sell: (/api/v2/sell/:portfolioName)
 
     Request Body:
 
@@ -43,7 +43,7 @@ The expected format for each request is:
         "quantity": Number,
     }
 
-### 3.  update: (/api/update/:portfolioName/:id)
+### 3.  update: (/api/v2/update/:portfolioName/:id)
 
     Request Body:
 

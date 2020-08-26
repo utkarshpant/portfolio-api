@@ -156,7 +156,7 @@ router.post('/sell', errorHandlerMiddleware((req, res) => {
     }
 }));
 
-router.put('/updateTrade/:id', (req, res) => {
+router.put('/update/:id', (req, res) => {
     /*
         Request body includes:
         Updated Trade object of 'buy' type, updated quantity, updated price

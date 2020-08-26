@@ -27,10 +27,9 @@ app.use('/api/v2', newPortfolioRoutes);
 let mongooseConnectionString;
 if (app.get('env') == "development") {
     mongooseConnectionString = "mongodb://localhost:27017/smallcase";
+} else {
+    mongooseConnectionString = `mongodb+srv://${config.get('database.username')}:${config.get('database.password')}@cluster0.5yvwv.gcp.mongodb.net/smallcase?retryWrites=true&w=majority`;
 }
-
-console.log(mongooseConnectionString);
-// mongooseConnectionString = `mongodb+srv://${config.get('database.username')}:${config.get('database.password')}@cluster0.5yvwv.gcp.mongodb.net/smallcase?retryWrites=true&w=majority`;
 
 // connect to database;
 mongoose.connect(mongooseConnectionString, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -45,7 +44,6 @@ app.get('/', (req, res) => {
 
 app.use(function(err, req, res, next){
     res.status(err.status).send(err.message);
-
 });
 
 // listening on the set port;

@@ -11,7 +11,9 @@ It removes the dependency on a portfolio named "TestPortfolio" existing in the d
 All primary requests now require the "name" of the portfolio to be provided in the request.
 <br>
 
-NOTE: To test the API, please use portfolio name: **TestPortfolio**, or create a portfolio as defined in the Utility endpoints below.
+**NOTE:** 
+1. To test the API, please use portfolio name: **TestPortfolio**, or create a portfolio as defined in the Utility endpoints below.
+2. Every individual Portfolio, Ticker or Trade is assigned its own _unique_ ID by MongoDB at the time of insertion. Thus, `tradeID` refers to the unique ID assigned to an individual trade. Retrieve this from the response of the `api/v2/getPortfolio/:portfolioName` endpoint.
 
 <br>
 
